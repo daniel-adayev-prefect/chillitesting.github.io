@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Page2</title>
+</head>
+<body>
+    <h1>Welcome to The Chicago Expense Form</h1>
+    <p>Feel Free to enter your expenses. If you want to split your expenses among people, enter the number of people you want to split between in the "Number of People" field and the "Who ordered" Field will adjust accordingly. Make sure to include yourself as one of the individuasls if you share part of the cost</p>
+    <p>ex. A 4 person Uber Ride paid by Regina between Regina, Daniel, Max, and Santi should be listed with Regina in "Who Paid", Regina, Daniel, Max, and Santi in the "Who Ordered", and 4 in the "Number of People"</p>
+     <form action="https://script.google.com/macros/s/AKfycbyvaBMRzahsQGXlANv00fVdQZJIBufwGQmk5pD8IwsEI-H7EtgaPBTqgsZ8kb0oh0yNcQ/exec" method="POST" id="paymentForm">
+    <div style="margin-bottom: 3px;">
+        <label for="VendorName">Vendor Name</label>
+        <input type="text" id="VendorName" name="VendorName" required>
+    </div>
+    <div style="margin-bottom: 20px;">
+        <label for="itemName">Item Name</label>
+        <input type="text" id="ItemName" name="ItemName" required>
+    </div>
+    <div style="margin-bottom: 3px;">
+        <label for="whoPaid">Who Paid:</label>
+        <input type="text" id="whoPaid" name="whoPaid" required>
+    </div>
+    <div id="whoOrderedContainer" style="margin-bottom: 20px;">
+        <label for="whoOrdered">Who Ordered:</label>
+        <input type="text" id="whoOrdered0" name="whoOrdered[]" >
+    </div>
+    <div style="margin-bottom: 3px;">
+        <label for="orderAmount">Order Amount</label>
+        <input type="number" id="orderAmount" name="orderAmount" step="0.01" required>
+    </div>
+    <div style="margin-bottom: 3px;">
+        <label for="tax">Tax:</label>
+        <input type="number" id="tax" name="tax" step="0.01">
+        <!-- Tax Type Selection -->
+        <input type="radio" id="taxPercent" name="taxType" value="percent" checked>
+        <label for="taxPercent">Percent</label>
+        <input type="radio" id="taxLiteral" name="taxType" value="literal">
+        <label for="taxLiteral">Literal</label>
+    </div>
+    <div style="margin-bottom: 20px;">
+        <label for="tip">Tip:</label>
+        <input type="number" id="tip" name="tip" step="0.01">
+        <!-- Tip Type Selection -->
+        <input type="radio" id="tipPercent" name="tipType" value="percent" checked>
+        <label for="tipPercent">Percent</label>
+        <input type="radio" id="tipLiteral" name="tipType" value="literal">
+        <label for="tipLiteral">Literal</label>
+    </div>
+    <div style="margin-bottom: 20px;">
+        <label for="numberOfPeople">Number of People:</label>
+        <input type="number" id="numberOfPeople" name="numberOfPeople" min="1" value="1">
+    </div>
+    <button type="submit">Submit</button>
+</form>
+<div id="totalSum">Total Sum: </div>
+
+<script>
+function calculateTotal() {
+    let amount = parseFloat(document.getElementById('orderAmount').value) || 0;
+    let tax = parseFloat(document.getElementById('tax').value) || 0;
+    let tip = parseFloat(document.getElementById('tip').value) || 0;
+    let taxType = document.querySelector('input[name="taxType"]:checked').value;
+    let tipType = document.querySelector('input[name="tipType"]:checked').value;
+
+    if (taxType === 'percent') {
+        tax = amount * (tax / 100);
+    }
+
+    if (tipType === 'percent') {
+        tip = amount * (tip / 100);
+    }
+
+    let totalSum = amount + tax + tip;
+    document.getElementById('totalSum').innerHTML = 'Total Sum: ' + totalSum.toFixed(2);
+}
+    function syncOrdered() {
+      let numberOfPeople = parseFloat(document.getElementById('numberOfPeople').value) || 1;
+      var container = document.getElementById('whoOrderedContainer');
+      var newInputCount = container.getElementsByTagName('input').length;
+
+    while (numberOfPeople != document.getElementById('whoOrderedContainer').getElementsByTagName('input').length){
+        if(numberOfPeople < document.getElementById('whoOrderedContainer').getElementsByTagName('input').length){
+             document.getElementById('whoOrderedContainer').removeChild(document.getElementById('whoOrderedContainer').lastChild);
+        }
+        if(numberOfPeople > document.getElementById('whoOrderedContainer').getElementsByTagName('input').length){
+            var newInput = document.createElement('input');
+            newInput.type = 'text';
+            newInput.id = 'whoOrdered' + String(document.getElementById('whoOrderedContainer').getElementsByTagName('input').length);
+            newInput.name = 'whoOrdered[]';
+            container.appendChild(newInput);
+            
+        }
+      
+    }
+    }
+  document.getElementById('paymentForm').addEventListener('input', calculateTotal);
+  document.getElementById('paymentForm').addEventListener('input', syncOrdered);
+</script>
+</body>
+</html> 
