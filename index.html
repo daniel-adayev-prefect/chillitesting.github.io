@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chili Piper Form</title>
-    <script src="https://prefect.chilipiper.com/concierge-js/cjs/concierge.js" crossorigin="anonymous" type="text/javascript"></script>
 </head>
 <body>
     <h1>Simple Chili Piper Form</h1>
@@ -18,17 +17,12 @@
         <button type="submit">Submit</button>
     </form>
 
-    <script>
-        // Initialize Chili Piper
-        ChiliPiper.deploy("prefect", "test", {
-            "formType": "HTML"
-        });
+    <script src="https://prefect.chilipiper.com/concierge-js/cjs/concierge.js" crossorigin="anonymous" type="text/javascript"></script>
+<script>
+  ChiliPiper.deploy("prefect", "test", {
+    "formType": "HTML"
+})
+</script>
 
-        // Prevent form submission from navigating away
-        document.getElementById("testForm").addEventListener("submit", function(event) {
-            event.preventDefault();
-            alert("Form submitted successfully. You can integrate additional Chili Piper actions here.");
-        });
-    </script>
 </body>
 </html>
